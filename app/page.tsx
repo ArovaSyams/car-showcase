@@ -6,7 +6,7 @@ import { fetchCars } from '@/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-export default async function Home() {
+export default function Home() {
 
   const [allCars, setAllCars] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,26 +22,26 @@ export default async function Home() {
   // pagination
   const [limit, setLimit] = useState(10);
 
+  const getCars = async () => {
+    setLoading(true);
+    try {
+      const results = await fetchCars({
+        manufacturer: manufacturer || '',
+        year: year || 2022,
+        fuel: fuel || '',
+        limit: limit || 10,
+        model: model || '',
+      });
+      
+      setAllCars(results);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
   
   useEffect(() => {
-    const getCars = async () => {
-      setLoading(true);
-      try {
-        const results = await fetchCars({
-          manufacturer: manufacturer || '',
-          year: year || 2022,
-          fuel: fuel || '',
-          limit: limit || 10,
-          model: model || '',
-        });
-        
-        setAllCars(results);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    }
     getCars();
   }, [manufacturer, model, year, fuel, limit])
   
@@ -76,15 +76,14 @@ export default async function Home() {
                 <CarCard car={car}/>
               ))}
             </div>
-
             {loading && (
               <div className="mt-16 w-full flex-center">
                 <Image 
-                  src="/loader.svg"
+                  src="/steering-wheel.svg"
                   alt="loader"
                   width={50}
                   height={50}
-                  className="object-contain"
+                  className="animate-spin object-contain"
                 />
               </div>
             )}
@@ -97,8 +96,19 @@ export default async function Home() {
           </section>
         ) : (
           <div className="home__error-container">
-            <h2 className='text-black text-xl font-bold'>Oops, no results</h2>
-            {/* <p>{allCars?.message}</p> */}
+            {loading ? (
+              <div className="mt-16 w-full flex-center">
+                <Image 
+                  src="/steering-wheel.svg"
+                  alt="loader"
+                  width={50}
+                  height={50}
+                  className="animate-spin object-contain"
+                />
+              </div>
+            ) : (
+              <h2 className='text-black text-xl font-bold'>Oops, no results</h2>
+            )}
           </div>
         )}
 

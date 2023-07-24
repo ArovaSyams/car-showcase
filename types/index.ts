@@ -45,10 +45,17 @@ export interface OptionProps {
 
 export interface CustomFilterProps {
   title: string;
-  options: OptionProps[]
+  options: OptionProps[];
+  setFilter: (filter: any) => void;
 }
 
 export interface ShowMoreProps {
   pageNumber: number;
   isNext: boolean;
+  setLimit: (limit: number) => void
+}
+
+export interface SearchBarProps {
+  setManufacturer: (manufacturer: string) => void
+  setModel: (model: string) => void
 }

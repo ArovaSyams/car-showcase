@@ -7,21 +7,14 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
 
-const CustomFilter = ({ title, options }: CustomFilterProps) => {
-  const router = useRouter();
+const CustomFilter = ({ title, options, setFilter }: CustomFilterProps) => {
   const [selected, setSelected] = useState(options[0]);
-
-  const handleUpdateParams = (e: {title: string, value: string}) => {
-    const newPathName = updateSearchParams(title, e.value.toLowerCase());
-
-    router.push(newPathName);
-  }
-
+  
   return (
     <div className="w-fit">
       <Listbox value={selected} onChange={(e) => {
         setSelected(e)
-        handleUpdateParams(e)
+        setFilter(e.value)
         }}>
         <div className="relative w-fit z-10">
           <Listbox.Button className="custom-filter__btn">
